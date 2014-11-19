@@ -1,0 +1,62 @@
+#! /bin/bash
+
+#############################################################################################
+#  Set UP partition
+#
+#  Version 1.0 FV/13th June 2012
+#  Version 1.1 FV/19th November 2014
+#############################################################################################
+
+SCONTROL=/opt/slurm/default/bin/scontrol
+PDSH=/opt/cray/pdsh/default/bin/pdsh
+PARTITION=$(ssh sdb $SCONTROL show partition $2 )
+PARTITIONALL=$(ssh sdb $SCONTROL show partition | grep PartitionName)
+HOST=sdb
+
+case "$1" in
+        start)
+                        $PDSH -w $HOST $SCONTROL update part=$2 State=UP
+                        ;;
+        startall)
+                        for i in $PARTITIONALL
+                        do
+                        $PDSH -w $HOST $SCONTROL update $i State=UP
+                        sleep 0.5
+                        done
+                        ;;
+        stop)
+                        $PDSH -w $HOST $SCONTROL update part=$2 State=DOWN
+                        sleep 0.5
+                        ;;
+        stopall)
+                        for i in $PARTITIONALL
+                        do
+                        $PDSH -w $HOST $SCONTROL update $i State=DOWN
+                        sleep 0.5
+                        done
+                        ;;
+        status)
+                        $PDSH -w $HOST $SCONTROL show part=$2 | grep -Ei 'PartitionName|state' | awk '{ print $2 }'
+                        ;;
+        statusall)
+                        for i in $PARTITIONALL
+                        do
+                        $PDSH -w $HOST $SCONTROL show $i | grep -Ei 'PartitionName|state' | awk '{ print $2 }' 
+                        done
+			;;
+        update)
+                        $PDSH -w $HOST $SCONTROL update part=$2 State=$3
+                        ;;
+	help)
+			echo "usage: ${0##*/} {startall|stopall|statusall}"
+			echo "usage: ${0##*/} {start|stop|status} [PARTITION]"
+			echo "usage: ${0##*/} {update} [PARTITION] [STATE]"
+                        exit 1
+                        ;;
+        *)
+			echo "usage: ${0##*/} {startall|stopall|statusall}"
+			echo "usage: ${0##*/} {start|stop|status} [PARTITION]"
+			echo "usage: ${0##*/} {update} [PARTITION] [STATE]"
+                        exit 1
+                        ;;
+esac
