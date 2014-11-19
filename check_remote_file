@@ -1,0 +1,32 @@
+#!/bin/bash
+
+PDSH=/opt/cray/pdsh/default/bin/pdsh
+
+if (( $# < 4 )); then
+        echo "Usage: $0 -H hostname -f remote file path "
+        exit 3
+fi
+
+while getopts "H:f:w:c:" OPT; do
+        case "$OPT" in
+        H)      HOSTS=$OPTARG
+                ;;
+        f)      FILE=$OPTARG
+                ;;
+        \?)     echo "Error"
+                exit 3;
+                ;;
+        esac
+done
+FILESYSTEM=$(echo $FILE | cut -d/ -f2)
+UPNODES=$($PDSH -w $HOSTS date | wc -l )
+CHECK=$($PDSH -w $HOSTS ls $FILE   2>/dev/null | wc -l)
+if [ $CHECK = $UPNODES ]
+then
+   echo "OK: File $FILE exists;"
+   exit 0
+else
+   echo "CRITICAL: File $FILE does not exist;"
+   exit 2
+fi
+exit 0
