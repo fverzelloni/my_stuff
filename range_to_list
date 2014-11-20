@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+pages="$1"
+#pages="1-100,200-202"
+echo $pages
+echo $pages | awk 'BEGIN { RS=","; FS="-"; ORS="" }
+  NR > 1  { print "," }
+  NF > 1  { for (i=$1; i<$2; ++i) { print i "," } print $2; next }
+          { print $1 }'
