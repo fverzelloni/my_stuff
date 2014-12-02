@@ -12,3 +12,6 @@ else
         echo "files are different"
         echo "$result"
 fi
+
+
+echo "ciao"
