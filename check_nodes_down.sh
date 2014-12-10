@@ -12,5 +12,8 @@ else
         echo "files are different"
         echo "$result"
 fi
+<<<<<<< HEAD
 
 echo $result
+=======
+>>>>>>> 44efd7982a51f6d089247ad1e85afb6fe6f5350f
