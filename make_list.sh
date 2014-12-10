@@ -13,7 +13,7 @@ if [ ! -z $NID ]
 		echo -e  "since they have not passed the regression test:"
 		tput sgr0;
 		echo ""
-		echo -e  "$NID"
+		echo -e  "--> $NID <--"
 		echo ""
 		echo -e "\033[31m \e[1m Please run:"
 		tput sgr0;
