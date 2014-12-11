@@ -33,7 +33,7 @@ case "$1" in
                         exit 1
                         ;;
 
-	"*" )		
+	* )		
 			msg "usage: ${0##*/} -f|--file FILENAME {to create a file}"
 			msg "usage: ${0##*/} -o|--output {to print in stdout}"
 			exit 1
@@ -41,5 +41,4 @@ case "$1" in
 
 
 esac
-
 exit 0
