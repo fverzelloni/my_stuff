@@ -35,12 +35,14 @@ case "$1" in
                         ;;
 
 	"-h" | "--help" )
-			echo "usage: ${0##*/} -f|--file FILENAME {to create a file} "
-			echo "usage: ${0##*/} -o|--output {to print in stdout}"
+			msg "usage: ${0##*/} -c|--count {to count down/admindown nodes} "
+			msg "usage: ${0##*/} -f|--file FILENAME {to create a file} "
+			msg "usage: ${0##*/} -o|--output {to print in stdout}"
                         exit 1
                         ;;
 
 	* )		
+			msg "usage: ${0##*/} -c|--count FILENAME {to count down/admindown nodes}"
 			msg "usage: ${0##*/} -f|--file FILENAME {to create a file}"
 			msg "usage: ${0##*/} -o|--output {to print in stdout}"
 			exit 1
