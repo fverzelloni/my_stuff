@@ -14,7 +14,7 @@ case "$1" in
 			paste list3 list1 | column -s $'\t' -t | awk '{ print $1","" "","" "","" "","" "","" ""," $3" "","$4 }' > $2
 			rm list1 list3
 			else
-			echo "usage: ${0##*/} -f|--file filename {to create a file} "
+			echo "usage: ${0##*/} -f|--file FILENAME {to create a file} "
                         echo "usage: ${0##*/} -o|--output {to print in stdout}"
                         exit 1
 			fi
@@ -28,13 +28,13 @@ case "$1" in
 			;;
 
 	"-h" | "--help" )
-			echo "usage: ${0##*/} -f|--file filename {to create a file} "
+			echo "usage: ${0##*/} -f|--file FILENAME {to create a file} "
 			echo "usage: ${0##*/} -o|--output {to print in stdout}"
                         exit 1
                         ;;
 
-	*)		
-			msg "usage: ${0##*/} -f|--file filename {to create a file}"
+	"*" )		
+			msg "usage: ${0##*/} -f|--file FILENAME {to create a file}"
 			msg "usage: ${0##*/} -o|--output {to print in stdout}"
 			exit 1
 			;;
