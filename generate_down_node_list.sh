@@ -11,11 +11,11 @@
 
 PATHTOWITH=5
 FILE_PATH=/tmp/nodes_down
-HOSTNAME=$(hostname | sed 's/[0-9]//g')
-DATE=$(date +%d%m%y_%H%M)
-CLOG=$(ls -tr1 $FILE_PATH/*.log | tail -n1)
-OLOG=$(ls -tr1 $FILE_PATH/*.log | tail -n2 | head -n1)
-DIFF=$(diff -a --suppress-common-lines -y $OLOG $CLOG )
+HOSTNAME="$(hostname | sed 's/[0-9]//g')"
+DATE="$(date +%d%m%y_%H%M)"
+CLOG="ls -tr1 $FILE_PATH/*.log | tail -n1"
+OLOG="ls -tr1 $FILE_PATH/*.log | tail -n2 | head -n1"
+DIFF="diff -a --suppress-common-lines -y $OLOG $CLOG "
 
 ## ROUTINE
 
