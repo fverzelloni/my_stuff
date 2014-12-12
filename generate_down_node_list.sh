@@ -31,6 +31,40 @@ case "$1" in
 	"-a" | "-auto" )
 			${0##*/} -o > $FILE_PATH/nodes_down_$DATE.log
 			;;
+	
+	"-c" | "--count" )
+                        ${0##*/} -o | wc -l
+                        ;;
+
+        "-C" | "--compare" )
+                        if [ -n "$DIFF" ]
+                                then
+                                        echo $DIFF | sed 's/,/ /g'
+                        fi
+                        ;;
+	
+	"--csv" )
+                        if [ "$2" != "" ]
+                        then
+                                xtprocadmin |grep down | tr "," "\n" | awk '{ print $1" "$5" "$3 }' > $FILE_PATH/list1
+                                cat $FILE_PATH/list1 | awk '{ print $1 }' | while read line ; do printf "nid%0*d\n" $PATHTOWITH $line ; done > $FILE_PATH/list2
+                                paste $FILE_PATH/list2 $FILE_PATH/list1 | column -s $'\t' -t | awk '{ print  $1","" "","" "","" "","" "","" ""," $3" "","$4 }' > $2
+                                rm $FILE_PATH/list1 $FILE_PATH/list2
+                        else
+                                ${0##*/} -h
+                        exit 1
+                        fi
+                        ;;
+
+	"-e" | "--email" )
+                        if [ "$2" != "" ]
+                        then
+                                ${0##*/} -o | mail -s "Nodes down list $HOSTNAME" $2
+                        else
+                                ${0##*/} -h
+                        exit 1
+                        fi
+                        ;;
 
 	"-f" | "--file" )
 			if [ "$2" != "" ]
@@ -42,46 +76,12 @@ case "$1" in
 			fi
 			;;
 
-	"-e" | "--email" )
-			if [ "$2" != "" ]
-			then
-				${0##*/} -o | mail -s "Nodes down list $HOSTNAME" $2
-			else
-                                ${0##*/} -h
-                        exit 1
-                        fi
-                        ;;
-
-	"--csv" )
-			if [ "$2" != "" ]
-                        then
-				xtprocadmin |grep down | tr "," "\n" | awk '{ print $1" "$5" "$3 }' > $FILE_PATH/list1
-				cat $FILE_PATH/list1 | awk '{ print $1 }' | while read line ; do printf "nid%0*d\n" $PATHTOWITH $line ; done > $FILE_PATH/list2
-				paste $FILE_PATH/list2 $FILE_PATH/list1 | column -s $'\t' -t | awk '{ print  $1","" "","" "","" "","" "","" ""," $3" "","$4 }' > $2
-				rm $FILE_PATH/list1 $FILE_PATH/list2
-			else
-                                ${0##*/} -h
-                        exit 1
-                        fi
-			;;
-
 	"-o" | "--output" )
 			xtprocadmin |grep down | tr "," "\n" | awk '{ print $1" "$5" "$3 }' > $FILE_PATH/list1
                         cat $FILE_PATH/list1 | awk '{ print $1 }' | while read line ; do printf "nid%0*d\n" $PATHTOWITH $line ; done > $FILE_PATH/list2
                         paste $FILE_PATH/list2 $FILE_PATH/list1 | column -s $'\t' -t | awk '{ printf ("%-11s%-12s%-s\n" ,$1, $3, $4) }'
                         rm $FILE_PATH/list1 $FILE_PATH/list2
                         ;;
-
-	"-c" | "--count" )
-			${0##*/} -o | wc -l
-                        ;;
-
-	"-C" | "--compare" )
-			if [ -n "$DIFF" ]
-			        then
-                			echo $DIFF | sed 's/,/ /g' 
-			fi
-			;;
 
 	"-h" | "--help" )
 			${0##*/}
@@ -96,7 +96,6 @@ case "$1" in
                         msg "usage: ${0##*/} -o|--output {to print in stdout}"
                         exit 1
 			;;
-
 
 esac
 exit 0
