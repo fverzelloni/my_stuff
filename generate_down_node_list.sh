@@ -36,13 +36,15 @@ case "$1" in
                         ;;
 
         "-C" | "--compare" )
-			if [ ! -z $CLOG ] || [ ! -z $OLOG ]
+			if [ ! -z $CLOG ] && [ ! -z $OLOG ] && [ "$CLOG" != "$OLOG" ]
 				then 
 					DIFF=$(diff -a --suppress-common-lines -y $OLOG $CLOG)
                         		if [ -n "$DIFF" ]
                                 		then
                                         		echo $DIFF | sed 's/,/ /g'
                         		fi
+				else
+					echo "Nodes down logs are missing"
 			fi
                         ;;
 	
