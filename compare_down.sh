@@ -3,7 +3,7 @@
 
 # VAR's
 HOSTNAME="$(hostname | sed 's/[0-9]//g')"
-COMMAND=`/apps/$HOSTNAME/system/scripts/generate_down_node_list.sh -C`
+COMMAND=$(/apps/$HOSTNAME/system/scripts/generate_down_node_list.sh -C)
 RECIPIENT=email@email.ch
 
 if [ ! -z "$COMMAND" ]
