@@ -13,9 +13,8 @@ PATHTOWITH=5
 FILE_PATH=/tmp/nodes_down
 HOSTNAME="$(hostname | sed 's/[0-9]//g')"
 DATE="$(date +%d%m%y_%H%M)"
-CLOG="$(ls -tr1 $FILE_PATH/*.log | tail -n1)"
-OLOG="$(ls -tr1 $FILE_PATH/*.log | tail -n2 | head -n1)"
-DIFF=`diff -a --suppress-common-lines -y $OLOG $CLOG`
+CLOG=$(ls -tr1 $FILE_PATH/*.log 2>/dev/null | tail -n1)
+OLOG=$(ls -tr1 $FILE_PATH/*.log 2>/dev/null | tail -n2 | head -n1)
 
 ## ROUTINE
 
@@ -37,10 +36,14 @@ case "$1" in
                         ;;
 
         "-C" | "--compare" )
-                        if [ -n "$DIFF" ]
-                                then
-                                        echo $DIFF | sed 's/,/ /g'
-                        fi
+			if [ ! -z $CLOG ] || [ ! -z $OLOG ]
+				then 
+					DIFF=$(diff -a --suppress-common-lines -y $OLOG $CLOG)
+                        		if [ -n "$DIFF" ]
+                                		then
+                                        		echo $DIFF | sed 's/,/ /g'
+                        		fi
+			fi
                         ;;
 	
 	"--csv" )
