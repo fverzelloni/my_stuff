@@ -2,7 +2,7 @@
 
 #VARs
 REPORT_EX=$(rbh-report --top-users 2>/dev/null | grep -i TB | awk '{ print $2 " "$5" " $4}' | tail -n+1 |sed 's/,//'g | cut -f1 -d".")
-RECIPIENT="fverzell@cscs.ch,nbianchi@cscs.ch"
+RECIPIENT="email@email.ch"
 
 #ROUTINE
 if [ -f /tmp/warning_list.txt ] 
