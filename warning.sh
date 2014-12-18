@@ -15,13 +15,16 @@ function msg() { echo -e >&2 "$@"; }
 case "$1" in
 
 	"-c" )
-                echo -e "$REPORT_EX" | while read line
-                	do
-                        	if  [ $(echo $line | awk '{ print $3 }') -gt 100 ]
+		if [ `hostname` != "daintrbh*" ] 
+		then
+                	echo -e "$REPORT_EX" | while read line
+                		do
+                       	 	if  [ $(echo $line | awk '{ print $3 }') -gt 100 ]
                                 	then
                                         	echo "$line" >> /tmp/warning_list.txt
                                 fi
-                        done
+                        	done
+		fi
 
                 if [ -f /tmp/warning_list.txt ]
                         then
@@ -31,36 +34,71 @@ case "$1" in
                 ;;
 
 	"-o" )
-		echo -e "$REPORT_EX" | while read line
-		do
-			if  [ $(echo $line | awk '{ print $3 }') -gt 100 ]
-        			then
-                			echo "$line"
-			fi
-		done
+		if [ `hostname` != "daintrbh*" ]
+                	then
+				${0##*/} -h
+                                exit 1
+			else	
+				echo -e "$REPORT_EX" | while read line
+					do
+						if  [ $(echo $line | awk '{ print $3 }') -gt 100 ]
+        						then
+                						echo "$line"
+						fi
+					done
+		fi
 		;;
 
 	"-e" )
-		if [ "$2" != "" ]
-                        then
-				echo -e "$REPORT_EX" | while read line  
-					do
-						if  [ $(echo $line | awk '{ print $3 }') -gt 100 ]
-						then
-							echo "$line" >> /tmp/warning_list.txt
-		
-						fi
-					done
-			else
-				${0##*/} -h
-                        	exit 1
+		if [ `hostname` != "daintrbh*" ]
+			then
+                                ${0##*/} -h
+                                exit 1
+                        else
+				if [ "$2" != "" ]
+                        		then
+						echo -e "$REPORT_EX" | while read line  
+							do
+								if  [ $(echo $line | awk '{ print $3 }') -gt 100 ]
+									then
+										echo "$line" >> /tmp/warning_list.txt
+								fi
+							done
+					else
+						${0##*/} -h
+                        			exit 1
+				fi
 		fi
-	
+		
 		if [ -f /tmp/warning_list.txt ]
         		then
                 		cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: The users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt $2
 				rm /tmp/warning_list.txt
 		fi
+		;;
+	"-r" )
+		REPORT_REMOTE=$( ssh root@remote_host "rbh-report --top-users 2>/dev/null | grep -i TB | awk '{ print $2 " "$5" " $4}'  | tail -n+1 |sed 's/,//'g | cut -f1 -d"."" )
+		if [ `hostname` != "daintrbh*" ]
+			then
+				echo -en "$REPORT_REMOTE \n" | while read line
+                        		do
+                                		if  [ $(echo $line | awk '{ print $3 }') -gt 100 ]
+                                        		then
+                                                		echo "$line" >> /tmp/warning_list.txt
+                                		fi
+                        		done
+			else
+				${0##*/} -h
+                                exit 1
+		
+		fi
+	
+                if [ -f /tmp/warning_list.txt ]
+                        then	
+                                cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: The users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt fverzell@cscs.ch
+                                rm /tmp/warning_list.txt
+                fi
+
 		;;
 	
 	"-h" | "--help" )
