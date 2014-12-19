@@ -28,7 +28,7 @@ case "$1" in
 
                 if [ -f /tmp/warning_list.txt ]
                         then
-                                cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: The users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt $RECIPIENT
+                                cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt $RECIPIENT
                                 rm /tmp/warning_list.txt
                 fi
                 ;;
@@ -72,7 +72,7 @@ case "$1" in
 		
 		if [ -f /tmp/warning_list.txt ]
         		then
-                		cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: The users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt $2
+                		cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt $2
 				rm /tmp/warning_list.txt
 		fi
 		;;
@@ -95,7 +95,7 @@ case "$1" in
 	
                 if [ -f /tmp/warning_list.txt ]
                         then	
-                                cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: The users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt fverzell@cscs.ch
+                                cat "/tmp/warning_list.txt" | mail -s "[/scratch/daint] Warning: users in the attached list are using more then 100Tb of disk space" -a /tmp/warning_list.txt fverzell@cscs.ch
                                 rm /tmp/warning_list.txt
                 fi
 
