@@ -31,7 +31,7 @@ case "$1" in
 
 	"-u" )
 		RBH_USER=$(ssh user@server "/usr/sbin/rbh-report -f /etc/robinhood.d/tmpfs/rbh_query.conf -u $2 2>/dev/null | sed 's/,//'g")
-		echo -e "$RBH_COMMAND"
+		echo -e "$RBH_USER"
 		;;
 	
 	* )		
