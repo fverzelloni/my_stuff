@@ -24,16 +24,15 @@ $REGRESSION -r $1 -c $i 1>/tmp/regression/regression_$i &
 sleep 5 
 done
 
-RUN=$(squeue -u fverzell | wc -l)
+RUN=$(squeue -u $USER | wc -l)
 
 if [ "$RUN" -gt 1 ] ;
 
 then
 	echo "Waiting..."
 	wait
-	FAILED=$(grep -i failed /tmp/regression/regression_*)
 	FAILED_NAME=$(grep -iH failed /tmp/regression/regression_* | awk '{ print $1 }' | sed s/://g)
-	if [ -n "$FAILED" ] ;
+	if [ -n "$FAILED_NAME" ] ;
                 then
 		echo "Warning a node failed the regression test, check the file $FAILED_NAME"
 
@@ -41,9 +40,8 @@ then
 		echo "Regression successfully passed"
         fi
 else
-	FAILED=$(grep -iH failed /tmp/regression/regression_*)
 	FAILED_NAME=$(grep -iH failed /tmp/regression/regression_* | awk '{ print $1 }' | sed s/://g)
-	if [ -n "$FAILED" ] ;
+	if [ -n "$FAILED_NAME" ] ;
  		then 
 		echo "Warning a node failed the regression test, check the file $FAILED_NAME"
 	else
