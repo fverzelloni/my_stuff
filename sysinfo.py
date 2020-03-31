@@ -6,10 +6,18 @@ import os
 import fileinput
 import subprocess
 import socket
+from subprocess import Popen, PIPE
+#from shutil import which
 
 #Variables
 http_srv = 'someo.cscs.ch'
 hostname = platform.node()
+
+#Functions
+def check_program_exists(name):
+    p = Popen(['/usr/bin/which', name], stdout=PIPE, stderr=PIPE)
+    p.communicate()
+    return p.returncode == 0
 
 # Save output in /tmp/sys_info_HOSTNAME.html
 sys.stdout = open('/tmp/sys_info_'+hostname.split(".")[0]+'.html','w')
@@ -55,7 +63,6 @@ uptime_minutes = (uptime % 3600) // 60
 # Load
 with open("/proc/loadavg", "r") as f:
     load = f.read().strip()
-#    print("Average Load: " + f.read().strip())
 
 # Create HTML
 print("<html>")
@@ -71,15 +78,29 @@ print("<br>")
 print("Distribution: " + dist)
 print("<br>")
 print("Kernel: " + kernel)
-#print("<br>")
+print("<br>")
 #BCM Version
-#bcmver = subprocess.getoutput('cmsh -c "main versioninfo"')
-if os.path.isfile('/cm/local/apps/cmd/bin/cmsh'):
+if check_program_exists('cmsh') == True:
     bcmver = subprocess.getoutput('cmsh -c "main versioninfo"')
     bcmver_split = (bcmver.splitlines())
+    #print(type(bcmver_split))
     for x in bcmver_split:
-        print("<br>" + x )
-print("<br>")
+        if "Manager" in x:
+            print("BCM Version: " + x.split()[2] + "<br>" )
+#Slurm Version
+if check_program_exists('sinfo') == True:
+    slurmver = subprocess.getoutput('sinfo -V')
+    print("<br>")
+    print("Slurm Version: " + slurmver.split()[1] )
+    print("<br>")
+#GPFS Version
+if check_program_exists('mmdiag') == True:
+    gpfsver = subprocess.getoutput('mmdiag --version')
+    gpfsver_split = (gpfsver.splitlines())
+    for x in gpfsver_split:
+        if "Current" in x:
+            print(x)
+            print("<br>")
 #Uptime
 print("Uptime: " + str(uptime_hours) + ":" + str(uptime_minutes) + " hours")
 print("<br>")
