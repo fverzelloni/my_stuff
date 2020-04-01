@@ -31,10 +31,6 @@ kernel = str(platform.release())
 # Distribution
 dist = platform.dist()
 dist = " ".join(x for x in dist)
-# Processor
-with open("/proc/cpuinfo", "r")  as f:
-    info = f.readlines()
-cpuinfo = [x.strip().split(":")[1] for x in info if "model name"  in x]
 # Memory
 with open("/proc/meminfo", "r") as f:
     lines = f.readlines()
@@ -106,9 +102,3 @@ sts = p.wait()
 
 # Delete files from /tmp
 os.remove('/tmp/sys_info_'+hostname.split(".")[0]+'.html')
-
-#print("Processors: ")
-#for index, item in enumerate(cpuinfo):
-#    print("    " + str(index) + ": " + item)
-#print("    " + str(index) + ": " + item))
-#print("<br>")
