@@ -86,6 +86,20 @@ if check_program_exists('mmdiag') == True:
     for x in gpfsver_split:
         if "Current" in x:
             print(x)
+#CUDA Version
+if check_program_exists('nvcc') == True:
+    cudaver = subprocess.getoutput('nvcc --version')
+    cudaver_split = (cudaver.splitlines())
+    for x in cudaver_split:
+        if "release" in x:
+            print("<br> CUDA Version: " + x.split(' ')[5] )
+#NVIDIA Driver Version
+if check_program_exists('nvidia-smi') == True:
+    nvidiadrv = subprocess.getoutput('nvidia-smi')
+    nvidiadrv_split = (nvidiadrv.splitlines())
+    for x in nvidiadrv_split:
+        if "Driver Version" in x:
+            print("<br> NVIDIA Driver Version: " + x.split()[5])
 #Uptime
 print("<br> Uptime: " + str(uptime_hours) + "h" ":" + str(uptime_minutes) + "m")
 #Load
