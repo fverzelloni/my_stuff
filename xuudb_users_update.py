@@ -36,7 +36,7 @@ hbp_username = config_items['credentials'] ['hbp_username']
 hbp_password = config_items['credentials'] ['hbp_password']
 ump_url = config_items['urls'] ['ump_url']
 hbp_url = config_items['urls'] ['hbp_url']
-users_to_skip = ['bp000094', 'bp000096', 'bp000235' ]
+users_to_skip = ['bp000094', 'bp000095', 'bp000096', 'bp000235', 'ich019sa', 'bp000095', 'bp000094:fverzell', 'fverzell:bp000094', 'lbologna:bp000029' ] 
 
 # Functions
 def get_ump_users():
